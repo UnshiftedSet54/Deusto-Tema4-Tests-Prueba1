@@ -1,7 +1,6 @@
-let userEmail =
-
 describe('Casos de uso de registro de usuario', () => {
-  it('El usuario rellena campos y anade exitosamente, devolviendo un mensaje exitoso', () => {
+  it('El usuario rellena los campos y se registra exitosamente, devolviendo un mensaje exitoso', () => {
+    cy.visit('http://127.0.0.1:5500/Tema4-Tests/prueba1/index.html')
     cy.get('#email').type('example@gmail.com')
     cy.wait(1000)
     cy.get('#password').type('Pwd123.')
@@ -12,4 +11,66 @@ describe('Casos de uso de registro de usuario', () => {
     cy.get('#message').contains('Usuario anadido exitosamente')
     cy.wait(1000)
   })
+  it('Se devuelve un mensaje de error en caso de faltar el campo "email"', () => {
+    cy.get('#password').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('#repeatPassword').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('button').click()
+    cy.wait(1000)
+    cy.get('#message').contains('Error: verifique que los campos estan completos')
+    cy.wait(1000)
+  })
+  it('Se devuelve un mensaje de error en caso de faltar el campo "password"', () => {
+    cy.get('#email').type('example@gmail.com')
+    cy.wait(1000)
+    cy.get('#repeatPassword').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('button').click()
+    cy.wait(1000)
+    cy.get('#message').contains('Error: verifique que los campos estan completos')
+    cy.wait(1000)
+  })
+  it('Se devuelve un mensaje de error en caso de faltar el campo "repeatPassword"', () => {
+    cy.get('#email').type('example@gmail.com')
+    cy.wait(1000)
+    cy.get('#password').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('button').click()
+    cy.wait(1000)
+    cy.get('#message').contains('Error: verifique que los campos estan completos')
+    cy.wait(1000)
+  })
+  it('Retorna un mensaje de error si el campo "email" tiene un formato incorrecto', () => {
+    cy.get('#email').type('hola.com')
+    cy.wait(1000)
+    cy.get('#password').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('#repeatPassword').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('button').click()
+    cy.get('#message').contains('Error: ingresar un correo electronico valido')
+  })
+  it('Retorna un mensaje de error si el campo "password" tiene un formato incorrecto', () => {
+    cy.get('#email').type('example@gmail.com')
+    cy.wait(1000)
+    cy.get('#password').type('Pwd1')
+    cy.wait(1000)
+    cy.get('#repeatPassword').type('Pwd1')
+    cy.wait(1000)
+    cy.get('button').click()
+    cy.get('#message').contains('Error: ingresar contrasena valida')
+  })
+  it('Retorna un mensaje de error si el campo "password" y el campo "repeatPassword" son distintos', () => {
+    cy.get('#email').type('example@gmail.com')
+    cy.wait(1000)
+    cy.get('#password').type('Pwd123.')
+    cy.wait(1000)
+    cy.get('#repeatPassword').type('Contra123.')
+    cy.wait(1000)
+    cy.get('button').click()
+    cy.get('#message').contains('Error: ambas contrasena deben coincidir')
+  })
 })
+
+
